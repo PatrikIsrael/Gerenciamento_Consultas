@@ -66,7 +66,7 @@ O **Gerenciamento de Consultas Médicas** é um sistema completo e robusto desen
 - [CSS3](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
 - [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
 - [Bootstrap](https://getbootstrap.com/)
-- [React](https://reactjs.org/) *(Opcional para interfaces mais dinâmicas)*
+
 
 ### **Ferramentas e Bibliotecas**
 - [Maven](https://maven.apache.org/) - Gerenciamento de dependências
@@ -82,13 +82,6 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em s
 - [Java JDK 11+](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 - [Maven](https://maven.apache.org/install.html)
 - [MySQL Server](https://dev.mysql.com/downloads/mysql/)
-- [Node.js](https://nodejs.org/en/) e [npm](https://www.npmjs.com/) *(se utilizar React no frontend)*
 - [Git](https://git-scm.com/downloads)
 
----
 
-## **Instalação e Configuração**
-
-### **1. Clonando o Repositório**
-```bash
-git clone https://github.com/SeuUsuario/Gerenciamento-Consultas-Medicas.git
