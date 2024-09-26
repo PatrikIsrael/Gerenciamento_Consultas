@@ -1,8 +1,6 @@
 package entity;
 
-
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -16,13 +14,10 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password;
+    private String password; // Senha codificada
 
     @Column(nullable = false)
-    private String role; // ADMIN, DOCTOR, PATIENT
-
-    @OneToMany(mappedBy = "user")
-    private Set<Appointment> appointments;
+    private String role; // Atributo para o papel do usuário (ex: ADMIN, DOCTOR, PATIENT)
 
     // Getters e Setters
     public Long getId() {
@@ -50,10 +45,10 @@ public class User {
     }
 
     public String getRole() {
-        return role;
+        return role; // Método para acessar o papel do usuário
     }
 
     public void setRole(String role) {
-        this.role = role;
+        this.role = role; // Método para definir o papel do usuário
     }
 }

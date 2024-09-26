@@ -1,12 +1,10 @@
 package entity;
 
-
 import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "doctors")
-
 public class Doctor {
 
     @Id
@@ -20,27 +18,19 @@ public class Doctor {
     private String specialty;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user; // Relacionamento com User
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Appointment> appointments;
 
     // Getters e Setters
-    public User getUser() {
-        return user;
+    public long getId() {
+        return id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getSpecialty() {
-        return specialty;
-    }
-
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -51,11 +41,27 @@ public class Doctor {
         this.name = name;
     }
 
-    public long getId() {
-        return id;
+    public String getSpecialty() {
+        return specialty;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
+    }
+
+    public User getUser() {
+        return user; // Método para acessar o User
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(Set<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }

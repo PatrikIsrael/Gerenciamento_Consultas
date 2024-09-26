@@ -14,17 +14,17 @@ public class Patient {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String phone;
 
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user; // Relacionamento com User
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Appointment> appointments;
 
     // Getters e Setters
@@ -61,10 +61,18 @@ public class Patient {
     }
 
     public User getUser() {
-        return user;
+        return user; // Método para acessar o User
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(Set<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }
