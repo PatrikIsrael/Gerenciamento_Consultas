@@ -23,9 +23,8 @@ public class Appointment {
     private LocalDateTime appointmentDate;
 
     @Column(nullable = false)
-    private String status; // Scheduled, Canceled, Completed
+    private String status;
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

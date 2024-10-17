@@ -14,28 +14,28 @@ public class DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    // Obter todos os médicos
+
     public List<Doctor> findAll() {
         return doctorRepository.findAll();
     }
 
-    // Salvar um novo médico
+
     public Doctor save(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
 
-    // Excluir um médico por ID
+
     public void delete(Long doctorId) {
         doctorRepository.deleteById(doctorId);
     }
 
-    // Obter um médico por ID
+
     public Doctor getDoctorById(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
-        return doctor.orElse(null); // Retorna null se não encontrado
+        return doctor.orElse(null);
     }
 
-    // Atualizar um médico existente
+
     public Doctor updateDoctor(Long id, Doctor doctorDetails) {
         Optional<Doctor> optionalDoctor = doctorRepository.findById(id);
         if (optionalDoctor.isPresent()) {
@@ -45,11 +45,11 @@ public class DoctorService {
             existingDoctor.setUser(doctorDetails.getUser());
             return doctorRepository.save(existingDoctor);
         }
-        return null; // Retorna null se não encontrado
+        return null;
     }
 
-    // Salvar um médico (método adicional)
+
     public Doctor saveDoctor(Doctor doctor) {
-        return save(doctor); // Usa o método save já existente
+        return save(doctor);
     }
 }

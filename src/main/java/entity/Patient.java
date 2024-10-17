@@ -27,7 +27,7 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Appointment> appointments;
 
-    // Getters e Setters
+
     public Long getId() {
         return id;
     }

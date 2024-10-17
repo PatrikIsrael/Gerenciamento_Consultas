@@ -14,33 +14,33 @@ public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
 
-    // Obter todos os pacientes
+
     public List<Patient> findAll() {
         return patientRepository.findAll();
     }
 
-    // Salvar um novo paciente
+
     public Patient save(Patient patient) {
         return patientRepository.save(patient);
     }
 
-    // Excluir um paciente por ID
+
     public void delete(Long patientId) {
         patientRepository.deleteById(patientId);
     }
 
-    // Obter todos os pacientes (método redundante)
+
     public List<Patient> getAllPatients() {
-        return findAll(); // Chama o método já existente
+        return findAll();
     }
 
-    // Obter um paciente por ID
+
     public Patient getPatientById(Long id) {
         Optional<Patient> patient = patientRepository.findById(id);
-        return patient.orElse(null); // Retorna null se não encontrado
+        return patient.orElse(null);
     }
 
-    // Atualizar um paciente existente
+
     public Patient updatePatient(Long id, Patient patientDetails) {
         Optional<Patient> optionalPatient = patientRepository.findById(id);
         if (optionalPatient.isPresent()) {
@@ -49,13 +49,13 @@ public class PatientService {
             existingPatient.setEmail(patientDetails.getEmail());
             existingPatient.setPhone(patientDetails.getPhone());
             existingPatient.setUser(patientDetails.getUser());
-            // Adicione outras propriedades que você deseja atualizar
+
             return patientRepository.save(existingPatient);
         }
-        return null; // Retorna null se não encontrado
+        return null;
     }
 
-    // Excluir um paciente por ID
+
     public void deletePatient(Long id) {
         patientRepository.deleteById(id);
     }

@@ -14,12 +14,12 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; // Senha codificada
+    private String password;
 
     @Column(nullable = false)
-    private String role; // Atributo para o papel do usuário (ex: ADMIN, DOCTOR, PATIENT)
+    private String role;
 
-    // Getters e Setters
+
     public Long getId() {
         return id;
     }
@@ -45,10 +45,10 @@ public class User {
     }
 
     public String getRole() {
-        return role; // Método para acessar o papel do usuário
+        return role;
     }
 
     public void setRole(String role) {
-        this.role = role; // Método para definir o papel do usuário
+        this.role = role;
     }
 }

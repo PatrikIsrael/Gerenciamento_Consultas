@@ -19,12 +19,11 @@ public class Doctor {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user; // Relacionamento com User
+    private User user;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Appointment> appointments;
 
-    // Getters e Setters
     public long getId() {
         return id;
     }
@@ -50,7 +49,7 @@ public class Doctor {
     }
 
     public User getUser() {
-        return user; // Método para acessar o User
+        return user;
     }
 
     public void setUser(User user) {

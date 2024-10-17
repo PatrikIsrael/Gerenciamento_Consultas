@@ -30,13 +30,11 @@ public class ClinicController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // --------------------------------
-    // CRUD para Pacientes
-    // --------------------------------
+
 
     @GetMapping("/patients")
     public ResponseEntity<List<Patient>> getAllPatients() {
-        List<Patient> patients = patientService.findAll(); // Corrigido para o método correto
+        List<Patient> patients = patientService.findAll();
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
@@ -48,9 +46,8 @@ public class ClinicController {
 
     @PostMapping("/patients")
     public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
-        // Codificar a senha do usuário associado ao paciente
         if (patient.getUser() != null) {
-            patient.getUser().setPassword(passwordEncoder.encode(patient.getUser().getPassword())); // Codificar senha
+            patient.getUser().setPassword(passwordEncoder.encode(patient.getUser().getPassword()));
         }
         Patient savedPatient = patientService.savePatient(patient);
         return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
@@ -58,9 +55,8 @@ public class ClinicController {
 
     @PutMapping("/patients/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody Patient patientDetails) {
-        // Se a senha foi fornecida, codificá-la
         if (patientDetails.getUser() != null) {
-            patientDetails.getUser().setPassword(passwordEncoder.encode(patientDetails.getUser().getPassword())); // Codificar senha
+            patientDetails.getUser().setPassword(passwordEncoder.encode(patientDetails.getUser().getPassword()));
         }
         Patient updatedPatient = patientService.updatePatient(id, patientDetails);
         return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
@@ -73,13 +69,10 @@ public class ClinicController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // --------------------------------
-    // CRUD para Médicos
-    // --------------------------------
 
     @GetMapping("/doctors")
     public ResponseEntity<List<Doctor>> getAllDoctors() {
-        List<Doctor> doctors = doctorService.findAll(); // Corrigido para o método correto
+        List<Doctor> doctors = doctorService.findAll();
         return new ResponseEntity<>(doctors, HttpStatus.OK);
     }
 
@@ -93,7 +86,7 @@ public class ClinicController {
     public ResponseEntity<Doctor> createDoctor(@RequestBody Doctor doctor) {
         // Codificar a senha do usuário associado ao médico
         if (doctor.getUser() != null) {
-            doctor.getUser().setPassword(passwordEncoder.encode(doctor.getUser().getPassword())); // Codificar senha
+            doctor.getUser().setPassword(passwordEncoder.encode(doctor.getUser().getPassword()));
         }
         Doctor savedDoctor = doctorService.saveDoctor(doctor);
         return new ResponseEntity<>(savedDoctor, HttpStatus.CREATED);
@@ -103,7 +96,7 @@ public class ClinicController {
     public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor doctorDetails) {
         // Se a senha foi fornecida, codificá-la
         if (doctorDetails.getUser() != null) {
-            doctorDetails.getUser().setPassword(passwordEncoder.encode(doctorDetails.getUser().getPassword())); // Codificar senha
+            doctorDetails.getUser().setPassword(passwordEncoder.encode(doctorDetails.getUser().getPassword()));
         }
         Doctor updatedDoctor = doctorService.updateDoctor(id, doctorDetails);
         return new ResponseEntity<>(updatedDoctor, HttpStatus.OK);
@@ -116,13 +109,11 @@ public class ClinicController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // --------------------------------
-    // CRUD para Agendamentos de Consultas
-    // --------------------------------
+
 
     @GetMapping("/appointments")
     public ResponseEntity<List<Appointment>> getAllAppointments() {
-        List<Appointment> appointments = appointmentService.getAllAppointments(); // Corrigido para o método correto
+        List<Appointment> appointments = appointmentService.getAllAppointments();
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
