@@ -4,27 +4,34 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class LoginUser {
+public class User {
 
-    public class LoginRequest {
-        private String username;
-        private String password;
 
-        // Getters e Setters
-        public String getUsername() {
-            return username;
-        }
+    private String username;
+    private String password;
+    private String role;
 
-        public void setUsername(String username) {
-            this.username = username;
-        }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-        public String getPassword() {
-            return password;
-        }
+    public String getUsername() {
+        return username;
+    }
 
-        public void setPassword(String password) {
-            this.password = password;
-        }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
