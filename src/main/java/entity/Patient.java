@@ -22,7 +22,7 @@ public class Patient {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user; // Relacionamento com User
+    private User user;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Appointment> appointments;
@@ -61,9 +61,8 @@ public class Patient {
     }
 
     public User getUser() {
-        return user; // Método para acessar o User
+        return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }
