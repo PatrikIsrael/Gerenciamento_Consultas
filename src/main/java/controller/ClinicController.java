@@ -3,6 +3,7 @@ package controller;
 import entity.Appointment;
 import entity.Doctor;
 import entity.Patient;
+import entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import service.DoctorService;
 import service.PatientService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -29,6 +31,28 @@ public class ClinicController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody User loginUser) {
+
+        if ("admin".equals(loginUser.getUsername()) && "admin".equals(loginUser.getPassword())) {
+
+            return new ResponseEntity<>("Login como admin bem-sucedido", HttpStatus.OK);
+        }
+
+
+        Optional<Patient> patient = patientService.findByUserName(loginUser.getUsername());
+
+        if (patient.isEmpty() || !passwordEncoder.matches(loginUser.getPassword(), patient.get().getUser().getPassword())) {
+            return new ResponseEntity<>("Credenciais inválidas", HttpStatus.UNAUTHORIZED);
+        }
+
+
+        return new ResponseEntity<>(patient, HttpStatus.OK);
+    }
+
+
 
 
 
@@ -84,7 +108,7 @@ public class ClinicController {
 
     @PostMapping("/doctors")
     public ResponseEntity<Doctor> createDoctor(@RequestBody Doctor doctor) {
-        // Codificar a senha do usuário associado ao médico
+
         if (doctor.getUser() != null) {
             doctor.getUser().setPassword(passwordEncoder.encode(doctor.getUser().getPassword()));
         }
@@ -94,7 +118,7 @@ public class ClinicController {
 
     @PutMapping("/doctors/{id}")
     public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor doctorDetails) {
-        // Se a senha foi fornecida, codificá-la
+
         if (doctorDetails.getUser() != null) {
             doctorDetails.getUser().setPassword(passwordEncoder.encode(doctorDetails.getUser().getPassword()));
         }
