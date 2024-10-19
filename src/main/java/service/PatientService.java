@@ -30,9 +30,6 @@ public class PatientService {
     }
 
 
-    public List<Patient> getAllPatients() {
-        return findAll();
-    }
 
 
     public Patient getPatientById(Long id) {
@@ -55,9 +52,8 @@ public class PatientService {
         return null;
     }
 
-
-    public void deletePatient(Long id) {
-        patientRepository.deleteById(id);
+    public Optional<Patient> findByUserName(String username){
+        return patientRepository.findByUserName(username);
     }
 
     public Patient savePatient(Patient patient) {
