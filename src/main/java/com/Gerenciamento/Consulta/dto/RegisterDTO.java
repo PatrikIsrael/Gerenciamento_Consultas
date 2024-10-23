@@ -1,4 +1,6 @@
 package com.Gerenciamento.Consulta.dto;
 
-public class RegisterDTO {
+import com.Gerenciamento.Consulta.entity.UserRole;
+
+public record RegisterDTO(String login, String password, UserRole role){
 }
