@@ -1,7 +1,7 @@
-package repository;
+package com.Gerenciamento.Consulta.controller.repository;
 
 
-import entity.Patient;
+import com.Gerenciamento.Consulta.controller.entity.Patient;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

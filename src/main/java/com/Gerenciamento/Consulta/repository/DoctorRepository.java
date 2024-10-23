@@ -1,6 +1,6 @@
-package repository;
+package com.Gerenciamento.Consulta.controller.repository;
 
-import entity.Doctor;
+import com.Gerenciamento.Consulta.controller.entity.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {

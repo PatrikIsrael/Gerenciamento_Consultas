@@ -1,6 +1,6 @@
-package repository;
+package com.Gerenciamento.Consulta.controller.repository;
 
-import entity.Appointment;
+import com.Gerenciamento.Consulta.controller.entity.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

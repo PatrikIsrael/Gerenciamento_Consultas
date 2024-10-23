@@ -1,10 +1,18 @@
-package entity;
+package com.Gerenciamento.Consulta.controller.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "patients")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Patient {
 
     @Id
@@ -25,53 +33,15 @@ public class Patient {
     private User user;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Appointment> appointments;
+    private Set<Appointment> appointments = new HashSet<>();
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Patient(String name, String email, String phone, User user, Set<Appointment> appointments) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public User getUser() {
-        return user;
-    }
-    public void setUser(User user) {
         this.user = user;
-    }
-
-    public Set<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
     }
+
 }

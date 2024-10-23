@@ -1,7 +1,7 @@
-package service;
+package com.Gerenciamento.Consulta.controller.service;
 
-import entity.Appointment;
-import repository.AppointmentRepository;
+import com.Gerenciamento.Consulta.controller.entity.Appointment;
+import com.Gerenciamento.Consulta.controller.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
-package service;
+package com.Gerenciamento.Consulta.controller.service;
 
-import entity.Doctor;
-import repository.DoctorRepository;
+import com.Gerenciamento.Consulta.controller.entity.Doctor;
+import com.Gerenciamento.Consulta.controller.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

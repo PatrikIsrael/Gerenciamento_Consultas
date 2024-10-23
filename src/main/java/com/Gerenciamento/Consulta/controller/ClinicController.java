@@ -1,17 +1,18 @@
-package controller;
+package com.Gerenciamento.Consulta.controller;
 
-import entity.Appointment;
-import entity.Doctor;
-import entity.Patient;
-import entity.User;
+import com.Gerenciamento.Consulta.controller.entity.Appointment;
+import com.Gerenciamento.Consulta.controller.entity.Doctor;
+import com.Gerenciamento.Consulta.controller.entity.Patient;
+import com.Gerenciamento.Consulta.controller.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import service.AppointmentService;
-import service.DoctorService;
-import service.PatientService;
+import com.Gerenciamento.Consulta.controller.service.AppointmentService;
+import com.Gerenciamento.Consulta.controller.service.DoctorService;
+import com.Gerenciamento.Consulta.controller.service.PatientService;
+import com.Gerenciamento.Consulta.controller.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,27 +33,19 @@ public class ClinicController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserService userService;
+
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> authenticateUser(@RequestBody User loginUser) {
-
-        if ("admin".equals(loginUser.getUsername()) && "admin".equals(loginUser.getPassword())) {
-
-            return new ResponseEntity<>("Login como admin bem-sucedido", HttpStatus.OK);
-        }
-
-
-        Optional<Patient> patient = patientService.findByUserName(loginUser.getUsername());
-
-        if (patient.isEmpty() || !passwordEncoder.matches(loginUser.getPassword(), patient.get().getUser().getPassword())) {
+        Optional<User> user = userService.findByUsername(loginUser.getUsername());
+        if (user.isEmpty() || !passwordEncoder.matches(loginUser.getPassword(), user.get().getPassword())) {
             return new ResponseEntity<>("Credenciais inválidas", HttpStatus.UNAUTHORIZED);
         }
 
-
-        return new ResponseEntity<>(patient, HttpStatus.OK);
+        return new ResponseEntity<>("Login bem-sucedido", HttpStatus.OK);
     }
-
-
 
 
 
@@ -77,14 +70,16 @@ public class ClinicController {
         return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
     }
 
+
     @PutMapping("/patients/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody Patient patientDetails) {
-        if (patientDetails.getUser() != null) {
+        if (patientDetails.getUser() != null && patientDetails.getUser().getPassword() != null) {
             patientDetails.getUser().setPassword(passwordEncoder.encode(patientDetails.getUser().getPassword()));
         }
         Patient updatedPatient = patientService.updatePatient(id, patientDetails);
         return new ResponseEntity<>(updatedPatient, HttpStatus.OK);
     }
+
 
 
     @DeleteMapping("/patients/{id}")
