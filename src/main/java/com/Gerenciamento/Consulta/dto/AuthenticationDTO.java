@@ -1,4 +1,4 @@
-package com.Gerenciamento.Consulta.controller.dto;
+package com.Gerenciamento.Consulta.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
