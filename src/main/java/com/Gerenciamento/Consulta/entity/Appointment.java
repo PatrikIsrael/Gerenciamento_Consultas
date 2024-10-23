@@ -1,4 +1,4 @@
-package com.Gerenciamento.Consulta.controller.entity;
+package com.Gerenciamento.Consulta.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
