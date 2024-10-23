@@ -1,18 +1,18 @@
 package com.Gerenciamento.Consulta.controller;
 
-import com.Gerenciamento.Consulta.controller.entity.Appointment;
-import com.Gerenciamento.Consulta.controller.entity.Doctor;
-import com.Gerenciamento.Consulta.controller.entity.Patient;
-import com.Gerenciamento.Consulta.controller.entity.User;
+import com.Gerenciamento.Consulta.entity.Appointment;
+import com.Gerenciamento.Consulta.entity.Doctor;
+import com.Gerenciamento.Consulta.entity.Patient;
+import com.Gerenciamento.Consulta.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import com.Gerenciamento.Consulta.controller.service.AppointmentService;
-import com.Gerenciamento.Consulta.controller.service.DoctorService;
-import com.Gerenciamento.Consulta.controller.service.PatientService;
-import com.Gerenciamento.Consulta.controller.service.UserService;
+import com.Gerenciamento.Consulta.service.AppointmentService;
+import com.Gerenciamento.Consulta.service.DoctorService;
+import com.Gerenciamento.Consulta.service.PatientService;
+import com.Gerenciamento.Consulta.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
