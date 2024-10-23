@@ -1,4 +1,4 @@
-package com.Gerenciamento.Consulta.controller;
+package com.Gerenciamento.Consulta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
