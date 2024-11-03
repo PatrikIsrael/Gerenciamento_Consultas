@@ -18,14 +18,14 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
-    private Patient patient; // Referência ao paciente
+    private Patient patient;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")
-    private Doctor doctor; // Referência ao médico
+    private Doctor doctor;
 
     @Column(nullable = false)
-    private LocalDateTime appointmentDate; // Data e hora da consulta
+    private LocalDateTime appointmentDate;
 
-    private String status; // Status da consulta (agendada, cancelada, concluída, etc.)
+    private String status;
 }
