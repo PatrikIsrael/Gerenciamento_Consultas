@@ -21,6 +21,9 @@ public class Patient {
     @Column(nullable = false)
     private String dateOfBirth;
 
+    @Setter
+    @Column(nullable = false)
+    private String cpf;
 
     private String medicalHistory;
 
