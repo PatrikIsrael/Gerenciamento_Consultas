@@ -1,14 +1,13 @@
 package com.Gerenciamento.Consulta.repository;
 
 import com.Gerenciamento.Consulta.entity.Consultation;
-import com.Gerenciamento.Consulta.entity.Doctor;
-import org.hibernate.internal.util.collections.LazyIndexedMap;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-public interface ConsultationRepository extends JpaRepository {
-    List<Consultation> findByPacientId (Long PatientId);
+@Repository
+public interface ConsultationRepository extends JpaRepository <Consultation, Long>{
+    List<Consultation> findByPatientId(Long patientId);
     List<Consultation> findByDoctorId (Long DoctorId);
 
 }
