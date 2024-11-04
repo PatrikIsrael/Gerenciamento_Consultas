@@ -5,12 +5,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "appointments")
+@Table(name = "consultations")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Appointment {
+public class Consultation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class Appointment {
     private Doctor doctor;
 
     @Column(nullable = false)
-    private LocalDateTime appointmentDate;
+    private LocalDateTime consultationDate;
 
     private String status;
 }
