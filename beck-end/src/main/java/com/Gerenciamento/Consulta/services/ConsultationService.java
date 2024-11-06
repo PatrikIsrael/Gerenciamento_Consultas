@@ -1,7 +1,8 @@
 package com.Gerenciamento.Consulta.services;
 
-import com.Gerenciamento.Consulta.model.Appointment;
-import com.Gerenciamento.Consulta.repository.AppointmentRepository;
+
+import com.Gerenciamento.Consulta.entity.Consultation;
+import com.Gerenciamento.Consulta.repository.ConsultationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,29 +10,28 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AppointmentService {
+public class ConsultationService {
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
+    private ConsultationRepository consultationRepository;
 
-    public List<Appointment> findAllAppointments() {
-        return appointmentRepository.findAll();
+    public List<Consultation> findAllAppointments() {
+        return consultationRepository.findAll();
     }
 
-    public Optional<Appointment> findAppointmentById(Long id) {
-        return appointmentRepository.findById(id);
+    public Optional<Consultation> findAppointmentById(Long id) {
+        return consultationRepository.findById(id);
     }
 
-    public Appointment saveAppointment(Appointment appointment) {
-        return appointmentRepository.save(appointment);
+    public Consultation saveAppointment(Consultation consultation) {
+        return consultationRepository.save(consultation);
     }
 
     public void deleteAppointment(Long id) {
-        appointmentRepository.deleteById(id);
+        consultationRepository.deleteById(id);
     }
 
-    // Exemplo de método para obter consultas por status
-    public List<Appointment> findAppointmentsByStatus(String status) {
-        return appointmentRepository.findByStatus(status);
+    public List<Consultation> findAppointmentsByStatus(String status) {
+        return consultationRepository.findByStatus(status);
     }
 }
