@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class DoctorServices {
+public class DoctorService {
 
     @Autowired
     private DoctorRepository doctorRepository;
@@ -17,16 +16,32 @@ public class DoctorServices {
     public List<Doctor> findAllDoctors() {
         return doctorRepository.findAll();
     }
-    public Optional<Doctor>findDoctorById (Long Id){
-        return doctorRepository.findById(Id);
+    public Doctor findById(Long id){
+        return doctorRepository.findById(id).orElse(null);
+    }
+
+    public Doctor updateDoctor (Long id, Doctor doctor){
+        Doctor existingDoctor = doctorRepository.findById(doctor.getId())
+                .orElseThrow(() -> new RuntimeException("Doutor não encontrado"));
+
+        existingDoctor.setName(doctor.getName());
+        existingDoctor.setSpecialty(doctor.getSpecialty());
+
+        return doctorRepository.save(existingDoctor);
     }
     public Doctor saveDoctor (Doctor doctor) {
         return doctorRepository.save(doctor);
     }
 
-    public void deleteDcotor(Long Id){
-        doctorRepository.deleteById(Id);
+    public boolean deleteDoctor(Long id) {
+        if (doctorRepository.existsById(id)) {
+            doctorRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
+
     public List<Doctor>findBySpeciality(String specialty){
         return doctorRepository.findBySpecialty(specialty);
     }
