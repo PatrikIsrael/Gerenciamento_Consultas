@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class PatientServices {
+public class PatientService {
 
     @Autowired
     private PatientRepository patientRepository;
@@ -29,7 +29,7 @@ public class PatientServices {
         return patientRepository.save(patient);
     }
 
-    public Patient UpdatePatient (Patient patient){
+    public Patient updatePatient(Long id, Patient patient){
         Patient existingPatient = patientRepository.findById(patient.getId())
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
@@ -41,8 +41,9 @@ public class PatientServices {
         return patientRepository.save(existingPatient);
     }
 
-    public void deletePatient (Long Id){
+    public boolean deletePatient (Long Id){
         patientRepository.deleteById(Id);
+        return false;
     }
 
     public List<Patient> findByName(String name) {
