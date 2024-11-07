@@ -5,6 +5,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "doctors")
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
