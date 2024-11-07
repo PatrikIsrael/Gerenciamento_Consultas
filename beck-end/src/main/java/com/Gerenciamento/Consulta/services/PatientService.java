@@ -41,9 +41,13 @@ public class PatientService {
         return patientRepository.save(existingPatient);
     }
 
-    public boolean deletePatient (Long Id){
-        patientRepository.deleteById(Id);
-        return false;
+    public boolean deletePatient (Long id){
+      if(patientRepository.existsById(id)){
+          patientRepository.deleteById(id);
+          return true;
+      }else{
+          return false;
+      }
     }
 
     public List<Patient> findByName(String name) {
