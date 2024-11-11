@@ -1,6 +1,8 @@
 package com.Gerenciamento.Consulta.services;
 
 import com.Gerenciamento.Consulta.entity.Patient;
+import com.Gerenciamento.Consulta.exceptions.InvalidRequestException;
+import com.Gerenciamento.Consulta.exceptions.ResourceNotFoundException;
 import com.Gerenciamento.Consulta.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,16 +20,19 @@ public class PatientService {
         return patientRepository.findAll();
     }
 
-    public Patient findById (Long Id){
-        return patientRepository.findById(Id).orElse(null);
+    public Patient findPatientById(Long id) {
+        return patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente com o ID " + id + " não encontrado"));
     }
 
-    public Patient savePatient(Patient patient) throws IllegalAccessException {
-        if(patientRepository.existsByCpf(patient.getCpf())){
-            throw new IllegalAccessException("CPF já cadastrado para outro paciente.");
+
+    public Patient savePatient(Patient patient) {
+        if (patientRepository.existsByCpf(patient.getCpf())) {
+            throw new InvalidRequestException("O CPF " + patient.getCpf() + " já está cadastrado.");
         }
         return patientRepository.save(patient);
     }
+
 
     public Patient updatePatient(Long id, Patient patient){
         Patient existingPatient = patientRepository.findById(patient.getId())
