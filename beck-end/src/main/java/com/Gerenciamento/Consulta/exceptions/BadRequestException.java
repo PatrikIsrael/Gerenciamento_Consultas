@@ -1,7 +1,7 @@
 package com.Gerenciamento.Consulta.exceptions;
 
-public class BadRe4questException extends RuntimeException {
-  public BadRe4questException(String message) {
-    super(message);
-  }
+public class BadRequestException extends RuntimeException {
+    public BadRequestException(String message) {
+        super(message);
+    }
 }
