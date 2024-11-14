@@ -3,6 +3,7 @@ package com.Gerenciamento.Consulta.services;
 import com.Gerenciamento.Consulta.entity.User;
 import com.Gerenciamento.Consulta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(Long Id){
         userRepository.deleteById(Id);
     }
