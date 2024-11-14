@@ -26,6 +26,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @PreAuthorize("hasHole('ADMIN')")
     public User UpdateUser (Long Id, User user){
         user.setId(Id);
         return userRepository.save(user);
