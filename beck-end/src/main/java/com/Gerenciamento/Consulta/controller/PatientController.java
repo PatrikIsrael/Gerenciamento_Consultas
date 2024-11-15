@@ -1,7 +1,7 @@
-package com.Gerenciamento.Consulta.service;
+package com.Gerenciamento.Consulta.controller;
 
 import com.Gerenciamento.Consulta.entity.Patient;
-import com.Gerenciamento.Consulta.services.PatientService;
+import com.Gerenciamento.Consulta.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class PatientController {
 
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
-        List<Patient> patients = patientService.findAllPatient();
+        List<Patient> patients = patientService.findAllPatients();
         return ResponseEntity.ok(patients);
     }
 
