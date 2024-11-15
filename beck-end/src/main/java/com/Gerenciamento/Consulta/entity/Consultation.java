@@ -44,9 +44,27 @@ public class Consultation {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    public Long getDoctorId() {
+        return doctor != null ? doctor.getId() : null;
+    }
+
+    public Long getPatientId() {
+        return patient != null ? patient.getId() : null;
+    }
+
     public enum Status {
-        SCHEDULED,
-        COMPLETED,
-        CANCELLED
+        AGENDADA("Agendada"),
+        COMPLETA("Completa"),
+        CANCELADA("Cancelada");
+
+        private final String displayName;
+
+        Status(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 }
