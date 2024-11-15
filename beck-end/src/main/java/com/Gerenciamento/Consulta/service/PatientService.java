@@ -1,4 +1,4 @@
-package com.Gerenciamento.Consulta.services;
+package com.Gerenciamento.Consulta.service;
 
 import com.Gerenciamento.Consulta.entity.Patient;
 import com.Gerenciamento.Consulta.exceptions.InvalidRequestException;
@@ -16,15 +16,14 @@ public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
 
-    public List<Patient>findAllPatient(){
+    public List<Patient> findAllPatients() {
         return patientRepository.findAll();
     }
 
     public Patient findPatientById(Long id) {
         return patientRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente com o ID " + id + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente com o ID " + id + " não encontrado."));
     }
-
 
     public Patient savePatient(Patient patient) {
         if (patientRepository.existsByCpf(patient.getCpf())) {
@@ -33,26 +32,30 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
+    public Patient updatePatient(Long id, Patient patientDetails) {
+        Patient existingPatient = patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente com o ID " + id + " não encontrado."));
 
-    public Patient updatePatient(Long id, Patient patient){
-        Patient existingPatient = patientRepository.findById(patient.getId())
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+        if (!existingPatient.getCpf().equals(patientDetails.getCpf()) &&
+                patientRepository.existsByCpf(patientDetails.getCpf())) {
+            throw new InvalidRequestException("O CPF " + patientDetails.getCpf() + " já está cadastrado.");
+        }
 
-        existingPatient.setName(patient.getName());
-        existingPatient.setCpf((patient.getCpf()));
-        existingPatient.setDateOfBirth(patient.getDateOfBirth());
-        existingPatient.setPhoneNumber(patient.getPhoneNumber());
+        existingPatient.setName(patientDetails.getName());
+        existingPatient.setCpf(patientDetails.getCpf());
+        existingPatient.setDateOfBirth(patientDetails.getDateOfBirth());
+        existingPatient.setPhoneNumber(patientDetails.getPhoneNumber());
+        existingPatient.setMedicalHistory(patientDetails.getMedicalHistory());
 
         return patientRepository.save(existingPatient);
     }
 
-    public boolean deletePatient (Long id){
-      if(patientRepository.existsById(id)){
-          patientRepository.deleteById(id);
-          return true;
-      }else{
-          return false;
-      }
+    public boolean deletePatient(Long id) {
+        if (patientRepository.existsById(id)) {
+            patientRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public List<Patient> findByName(String name) {
@@ -60,10 +63,8 @@ public class PatientService {
     }
 
     public Patient findByCpf(String cpf) {
-        return patientRepository.findByCpf(cpf).orElse(null);
-    }
-    public boolean existsByCpf(String cpf) {
-        return patientRepository.existsByCpf(cpf);
+        return patientRepository.findByCpf(cpf)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente com o CPF " + cpf + " não encontrado."));
     }
 
     public long countAllPatients() {
@@ -73,6 +74,4 @@ public class PatientService {
     public List<Patient> findByRegistrationDate(LocalDate startDate, LocalDate endDate) {
         return patientRepository.findByRegistrationDateBetween(startDate, endDate);
     }
-
-
 }
