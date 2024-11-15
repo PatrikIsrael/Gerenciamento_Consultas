@@ -1,8 +1,9 @@
-package com.Gerenciamento.Consulta.services;
+package com.Gerenciamento.Consulta.service;
 
 import com.Gerenciamento.Consulta.dto.CreateUserDTO;
-import com.Gerenciamento.Consulta.entity.User;
 import com.Gerenciamento.Consulta.dto.UpdateUserDTO;
+import com.Gerenciamento.Consulta.entity.User;
+import com.Gerenciamento.Consulta.entity.UserRole;
 import com.Gerenciamento.Consulta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,16 +26,19 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User saveUser(CreateUserDTO createUserDTO) {
+    public User saveUser(CreateUserDTO userDTO) {
         User user = new User();
-        user.setLogin(createUserDTO.getLogin());
-        user.setPassword(createUserDTO.getPassword());
-        user.setEmail(createUserDTO.getEmail());
-
+        user.setLogin(userDTO.getLogin());
+        user.setPassword(userDTO.getPassword());
+        user.setEmail(userDTO.getEmail());
+        if (userDTO.getRole() != null) {
+            user.setRole(userDTO.getRole());
+        } else {
+            user.setRole(UserRole.USER);
+        }
 
         return userRepository.save(user);
     }
-
 
     @PreAuthorize("hasRole('ADMIN')")
     public User updateUser(Long id, UpdateUserDTO updateUserDTO) {
@@ -44,10 +48,13 @@ public class UserService {
             user.setPassword(updateUserDTO.getPassword());
             user.setEmail(updateUserDTO.getEmail());
             user.setRole(updateUserDTO.getRole());
+
+
             return userRepository.save(user);
         }
         return null;
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(Long id) {
@@ -57,5 +64,4 @@ public class UserService {
     public Optional<User> findByLogin(String login) {
         return userRepository.findByLogin(login);
     }
-
 }
