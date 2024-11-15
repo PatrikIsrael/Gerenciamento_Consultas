@@ -1,10 +1,14 @@
-package com.Gerenciamento.Consulta.services;
+package com.Gerenciamento.Consulta.service;
 
 import com.Gerenciamento.Consulta.dto.ConsultationDTO;
 import com.Gerenciamento.Consulta.entity.Consultation;
+import com.Gerenciamento.Consulta.entity.Doctor;
+import com.Gerenciamento.Consulta.entity.Patient;
 import com.Gerenciamento.Consulta.exceptions.InvalidRequestException;
 import com.Gerenciamento.Consulta.exceptions.ResourceNotFoundException;
 import com.Gerenciamento.Consulta.repository.ConsultationRepository;
+import com.Gerenciamento.Consulta.repository.DoctorRepository;
+import com.Gerenciamento.Consulta.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +21,19 @@ public class ConsultationService {
     @Autowired
     private ConsultationRepository consultationRepository;
 
+    @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+
     public List<ConsultationDTO> findAllConsultations() {
         return consultationRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
 
     public ConsultationDTO findConsultationById(Long id) {
         Consultation consultation = consultationRepository.findById(id)
@@ -29,15 +41,28 @@ public class ConsultationService {
         return convertToDTO(consultation);
     }
 
+
     public ConsultationDTO saveConsultation(ConsultationDTO consultationDTO) {
         if (consultationDTO.getConsultationDate() == null || consultationDTO.getDoctorId() == null || consultationDTO.getPatientId() == null) {
             throw new InvalidRequestException("Dados obrigatórios da consulta estão ausentes.");
         }
 
-        Consultation consultation = convertToEntity(consultationDTO);
+        Doctor doctor = doctorRepository.findById(consultationDTO.getDoctorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado"));
+        Patient patient = patientRepository.findById(consultationDTO.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
+
+
+        Consultation consultation = new Consultation();
+        consultation.setConsultationDate(consultationDTO.getConsultationDate());
+        consultation.setStatus(consultationDTO.getStatus());
+        consultation.setDoctor(doctor);
+        consultation.setPatient(patient);
+
         Consultation savedConsultation = consultationRepository.save(consultation);
         return convertToDTO(savedConsultation);
     }
+
 
     public ConsultationDTO updateConsultation(Long id, ConsultationDTO consultationDTO) {
         Consultation existingConsultation = consultationRepository.findById(id)
@@ -49,12 +74,15 @@ public class ConsultationService {
 
         existingConsultation.setConsultationDate(consultationDTO.getConsultationDate());
         existingConsultation.setStatus(consultationDTO.getStatus());
-        existingConsultation.setDoctorId(consultationDTO.getDoctorId());
-        existingConsultation.setPatientId(consultationDTO.getPatientId());
+        existingConsultation.setDoctor(doctorRepository.findById(consultationDTO.getDoctorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado")));
+        existingConsultation.setPatient(patientRepository.findById(consultationDTO.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado")));
 
         Consultation updatedConsultation = consultationRepository.save(existingConsultation);
         return convertToDTO(updatedConsultation);
     }
+
 
     public void deleteConsultation(Long id) {
         if (!consultationRepository.existsById(id)) {
@@ -62,6 +90,7 @@ public class ConsultationService {
         }
         consultationRepository.deleteById(id);
     }
+
 
     public List<ConsultationDTO> findConsultationsByStatus(String status) {
         if (status == null || status.isEmpty()) {
@@ -71,6 +100,7 @@ public class ConsultationService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
 
     private ConsultationDTO convertToDTO(Consultation consultation) {
         ConsultationDTO dto = new ConsultationDTO();
@@ -82,14 +112,4 @@ public class ConsultationService {
         return dto;
     }
 
-    private Consultation convertToEntity(ConsultationDTO consultationDTO) {
-        Consultation consultation = new Consultation();
-        consultation.setId(consultationDTO.getId());
-        consultation.setConsultationDate(consultationDTO.getConsultationDate());
-        consultation.setStatus(consultationDTO.getStatus());
-        // Assuming you have methods to find doctor and patient by ID
-        consultation.setDoctor(doctorRepository.findById(consultationDTO.getDoctorId()).orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado")));
-        consultation.setPatient(patientRepository.findById(consultationDTO.getPatientId()).orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado")));
-        return consultation;
-    }
 }
