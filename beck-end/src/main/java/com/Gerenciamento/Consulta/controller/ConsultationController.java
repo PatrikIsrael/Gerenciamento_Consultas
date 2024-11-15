@@ -1,62 +1,85 @@
-package com.Gerenciamento.Consulta.service;
+package com.Gerenciamento.Consulta.controller;
 
-import com.Gerenciamento.Consulta.entity.Consultation;
-import com.Gerenciamento.Consulta.services.ConsultationService;
+import com.Gerenciamento.Consulta.dto.ConsultationDTO;
+import com.Gerenciamento.Consulta.service.ConsultationService;
+import com.Gerenciamento.Consulta.exceptions.InvalidRequestException;
+import com.Gerenciamento.Consulta.exceptions.ResourceNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/consultations")
+
 public class ConsultationController {
 
     @Autowired
     private ConsultationService consultationService;
 
     @GetMapping
-    public ResponseEntity<List<Consultation>> getAllConsultations() {
-        List<Consultation> consultations = consultationService.findAllConsultations();
+    public ResponseEntity<List<ConsultationDTO>> getAllConsultations() {
+        List<ConsultationDTO> consultations = consultationService.findAllConsultations();
         return ResponseEntity.ok(consultations);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Consultation> getConsultationById(@PathVariable Long id) {
-        Consultation consultation = consultationService.findConsultationById(id);
-        if (consultation != null) {
+    public ResponseEntity<ConsultationDTO> getConsultationById(@PathVariable Long id) {
+        try {
+            ConsultationDTO consultation = consultationService.findConsultationById(id);
             return ResponseEntity.ok(consultation);
-        } else {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Consultation> createConsultation(@RequestBody Consultation consultation) {
-        Consultation newConsultation = consultationService.saveConsultation(consultation);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newConsultation);
+    public ResponseEntity<ConsultationDTO> createConsultation(@Valid @RequestBody ConsultationDTO consultationDTO) {
+        try {
+            ConsultationDTO newConsultation = consultationService.saveConsultation(consultationDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newConsultation);
+        } catch (InvalidRequestException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Consultation> updateConsultation(@PathVariable Long id, @RequestBody Consultation consultationDetails) {
+    public ResponseEntity<ConsultationDTO> updateConsultation(@PathVariable Long id, @Valid @RequestBody ConsultationDTO consultationDetails) {
         try {
-            Consultation updatedConsultation = consultationService.updateConsultation(id, consultationDetails);
+            ConsultationDTO updatedConsultation = consultationService.updateConsultation(id, consultationDetails);
             return ResponseEntity.ok(updatedConsultation);
-        } catch (RuntimeException e) {
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (InvalidRequestException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteConsultation(@PathVariable Long id) {
+        try {
+            consultationService.deleteConsultation(id);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteConsultation(@PathVariable Long id) {
-        consultationService.deleteConsultation(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Consultation>> getConsultationsByStatus(@PathVariable String status) {
-        List<Consultation> consultations = consultationService.findConsultationsByStatus(status);
-        return ResponseEntity.ok(consultations);
+    public ResponseEntity<List<ConsultationDTO>> getConsultationsByStatus(@PathVariable String status) {
+        try {
+            List<ConsultationDTO> consultations = consultationService.findConsultationsByStatus(status);
+            return ResponseEntity.ok(consultations);
+        } catch (InvalidRequestException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }
