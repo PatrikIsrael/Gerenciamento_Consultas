@@ -1,4 +1,4 @@
-package com.Gerenciamento.Consulta.controller;
+package com.Gerenciamento.Consulta.service;
 
 import com.Gerenciamento.Consulta.entity.Patient;
 import com.Gerenciamento.Consulta.services.PatientService;
