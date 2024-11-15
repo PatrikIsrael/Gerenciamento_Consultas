@@ -1,5 +1,6 @@
 package com.Gerenciamento.Consulta.entity;
 
+import com.Gerenciamento.Consulta.dto.DoctorDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,11 +11,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Doctor {
+public class Doctor extends DoctorDTO {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
