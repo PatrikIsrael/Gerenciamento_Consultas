@@ -1,13 +1,17 @@
-package com.Gerenciamento.Consulta.services;
+package com.Gerenciamento.Consulta.service;
 
+import com.Gerenciamento.Consulta.dto.DoctorDTO;
 import com.Gerenciamento.Consulta.entity.Doctor;
+import com.Gerenciamento.Consulta.entity.User;
 import com.Gerenciamento.Consulta.exceptions.InvalidRequestException;
 import com.Gerenciamento.Consulta.exceptions.ResourceNotFoundException;
 import com.Gerenciamento.Consulta.repository.DoctorRepository;
+import com.Gerenciamento.Consulta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DoctorService {
@@ -15,33 +19,59 @@ public class DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    public List<Doctor> findAllDoctors() {
-        return doctorRepository.findAll();
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<DoctorDTO> findAllDoctors() {
+        return doctorRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Doctor findById(Long id){
-        return doctorRepository.findById(id)
+    public DoctorDTO findById(Long id) {
+        Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico com o ID " + id + " não encontrado."));
+        return convertToDTO(doctor);
     }
 
-    public Doctor updateDoctor(Long id, Doctor doctorDetails){
+    public DoctorDTO updateDoctor(Long id, DoctorDTO doctorDTO) {
         Doctor existingDoctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico com o ID " + id + " não encontrado."));
 
-        if (doctorDetails.getName() == null || doctorDetails.getSpecialty() == null) {
+        if (doctorDTO.getName() == null || doctorDTO.getSpecialty() == null) {
             throw new InvalidRequestException("Nome e especialidade são obrigatórios para atualização.");
         }
 
-        existingDoctor.setName(doctorDetails.getName());
-        existingDoctor.setSpecialty(doctorDetails.getSpecialty());
+        existingDoctor.setName(doctorDTO.getName());
+        existingDoctor.setSpecialty(doctorDTO.getSpecialty());
 
-        return doctorRepository.save(existingDoctor);
+        if (doctorDTO.getUserId() != null) {
+            User user = userRepository.findById(doctorDTO.getUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Usuário com o ID " + doctorDTO.getUserId() + " não encontrado."));
+            existingDoctor.setUser(user);
+        }
+
+        Doctor updatedDoctor = doctorRepository.save(existingDoctor);
+        return convertToDTO(updatedDoctor);
     }
-    public Doctor saveDoctor(Doctor doctor) {
-        if (doctor.getName() == null || doctor.getSpecialty() == null) {
+
+    public Doctor saveDoctor(DoctorDTO doctorDTO) {
+        if (doctorDTO.getName() == null || doctorDTO.getSpecialty() == null) {
             throw new InvalidRequestException("Nome e especialidade são obrigatórios para salvar um médico.");
         }
-        return doctorRepository.save(doctor);
+
+        Doctor doctor = new Doctor();
+        doctor.setName(doctorDTO.getName());
+        doctor.setSpecialty(doctorDTO.getSpecialty());
+
+        if (doctorDTO.getUserId() != null) {
+            User user = userRepository.findById(doctorDTO.getUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Usuário com o ID " + doctorDTO.getUserId() + " não encontrado."));
+            doctor.setUser(user);
+        }
+
+        Doctor savedDoctor = doctorRepository.save(doctor);
+        return (Doctor) convertToDTO(savedDoctor);
     }
 
     public boolean deleteDoctor(Long id) {
@@ -49,12 +79,18 @@ public class DoctorService {
             doctorRepository.deleteById(id);
             return true;
         } else {
-            return false;
+            throw new ResourceNotFoundException("Médico com o ID " + id + " não encontrado.");
         }
     }
 
-    public List<Doctor>findBySpeciality(String specialty){
-        return doctorRepository.findBySpecialty(specialty);
+    public List<DoctorDTO> findBySpecialty(String specialty) {
+        return doctorRepository.findBySpecialty(specialty).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
+    private DoctorDTO convertToDTO(Doctor doctor) {
+        Long userId = doctor.getUser() != null ? doctor.getUser().getId() : null;
+        return new DoctorDTO(doctor.getId(), doctor.getName(), doctor.getSpecialty(), userId);
+    }
 }
