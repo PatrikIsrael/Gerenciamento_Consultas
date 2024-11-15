@@ -1,9 +1,9 @@
 package com.Gerenciamento.Consulta.controller;
 
+import com.Gerenciamento.Consulta.entity.User;
+import com.Gerenciamento.Consulta.service.UserService;
 import com.Gerenciamento.Consulta.dto.CreateUserDTO;
 import com.Gerenciamento.Consulta.dto.UpdateUserDTO;
-import com.Gerenciamento.Consulta.entity.User;
-import com.Gerenciamento.Consulta.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +35,13 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO updateUserDTO) {
