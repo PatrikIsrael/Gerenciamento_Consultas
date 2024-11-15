@@ -1,8 +1,7 @@
-package com.Gerenciamento.Consulta.service;
+package com.Gerenciamento.Consulta.controller;
 
-import com.Gerenciamento.Consulta.entity.Doctor;
-import com.Gerenciamento.Consulta.services.DoctorService;
-
+import com.Gerenciamento.Consulta.dto.DoctorDTO;
+import com.Gerenciamento.Consulta.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,52 +14,65 @@ import java.util.List;
 public class DoctorController {
 
     @Autowired
-    private  DoctorService doctorService;
-
+    private DoctorService doctorService;
 
     @GetMapping
-    public ResponseEntity<List<Doctor>> getAllDoctors() {
-        List<Doctor> doctors = doctorService.findAllDoctors();
+    public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
+        List<DoctorDTO> doctors = doctorService.findAllDoctors();
         return ResponseEntity.ok(doctors);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
-        Doctor doctor = doctorService.findById(id);
-        if (doctor != null) {
+    public ResponseEntity<DoctorDTO> getDoctorById(@PathVariable Long id) {
+        try {
+            DoctorDTO doctor = doctorService.findById(id);
             return ResponseEntity.ok(doctor);
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<DoctorDTO> createDoctor(@RequestBody DoctorDTO doctorDTO) {
+        try {
+            DoctorDTO newDoctor = doctorService.saveDoctor(doctorDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newDoctor);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
 
-    @PostMapping
-    public ResponseEntity<Doctor> createDoctor(@RequestBody Doctor doctor) {
-        Doctor newDoctor = doctorService.saveDoctor(doctor);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newDoctor);
-    }
-
-
     @PutMapping("/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor doctorDetails) {
-        Doctor updatedDoctor = doctorService.updateDoctor(id, doctorDetails);
-        if (updatedDoctor != null) {
+    public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO) {
+        try {
+            DoctorDTO updatedDoctor = doctorService.updateDoctor(id, doctorDTO);
             return ResponseEntity.ok(updatedDoctor);
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
-        boolean isDeleted = doctorService.deleteDoctor(id);
-        if (isDeleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            boolean isDeleted = doctorService.deleteDoctor(id);
+            if (isDeleted) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+
+    @GetMapping("/specialty/{specialty}")
+    public ResponseEntity<List<DoctorDTO>> getDoctorsBySpecialty(@PathVariable String specialty) {
+        List<DoctorDTO> doctors = doctorService.findBySpecialty(specialty);
+        return ResponseEntity.ok(doctors);
     }
 }
