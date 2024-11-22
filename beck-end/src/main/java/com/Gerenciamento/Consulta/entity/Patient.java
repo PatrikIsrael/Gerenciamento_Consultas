@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "patients")
@@ -48,4 +49,5 @@ public class Patient {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
 }
