@@ -1,11 +1,8 @@
 package com.Gerenciamento.Consulta.controller;
 
-import com.Gerenciamento.Consulta.entities.User;
+import com.Gerenciamento.Consulta.dto.UserDTO;
 import com.Gerenciamento.Consulta.service.UserService;
-import com.Gerenciamento.Consulta.dto.CreateUserDTO;
-import com.Gerenciamento.Consulta.dto.UpdateUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,47 +15,28 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody CreateUserDTO createUserDTO) {
-        User user = userService.saveUser(createUserDTO);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
     }
-
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.findById(id);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findUserById(id));
     }
 
-
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAllUsers();
-        return ResponseEntity.ok(users);
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.createUser(userDTO));
     }
-
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO updateUserDTO) {
-        User updatedUser = userService.updateUser(id, updateUserDTO);
-        if (updatedUser == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateUser(id, userDTO));
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        User user = userService.findById(id);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
