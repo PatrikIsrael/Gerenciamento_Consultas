@@ -1,4 +1,4 @@
-package com.Gerenciamento.Consulta.entity;
+package com.Gerenciamento.Consulta.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +7,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 @Entity
 @Table(name = "patients")

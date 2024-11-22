@@ -1,8 +1,8 @@
 package com.Gerenciamento.Consulta.repository;
 
-import com.Gerenciamento.Consulta.entity.Consultation;
-import com.Gerenciamento.Consulta.entity.Doctor;
-import com.Gerenciamento.Consulta.entity.Patient;
+import com.Gerenciamento.Consulta.entities.Consultation;
+import com.Gerenciamento.Consulta.entities.Doctor;
+import com.Gerenciamento.Consulta.entities.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

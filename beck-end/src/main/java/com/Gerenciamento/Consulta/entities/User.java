@@ -1,4 +1,4 @@
-package com.Gerenciamento.Consulta.entity;
+package com.Gerenciamento.Consulta.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

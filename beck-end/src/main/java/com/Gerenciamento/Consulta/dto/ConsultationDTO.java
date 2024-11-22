@@ -1,6 +1,6 @@
 package com.Gerenciamento.Consulta.dto;
 
-import com.Gerenciamento.Consulta.entity.Consultation.Status;
+import com.Gerenciamento.Consulta.entities.Consultation.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package com.Gerenciamento.Consulta.controller;
 
-import com.Gerenciamento.Consulta.entity.User;
+import com.Gerenciamento.Consulta.entities.User;
 import com.Gerenciamento.Consulta.service.UserService;
 import com.Gerenciamento.Consulta.dto.CreateUserDTO;
 import com.Gerenciamento.Consulta.dto.UpdateUserDTO;

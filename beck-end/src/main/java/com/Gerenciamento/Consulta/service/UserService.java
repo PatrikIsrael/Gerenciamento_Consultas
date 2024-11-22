@@ -2,8 +2,8 @@ package com.Gerenciamento.Consulta.service;
 
 import com.Gerenciamento.Consulta.dto.CreateUserDTO;
 import com.Gerenciamento.Consulta.dto.UpdateUserDTO;
-import com.Gerenciamento.Consulta.entity.User;
-import com.Gerenciamento.Consulta.entity.UserRole;
+import com.Gerenciamento.Consulta.entities.User;
+import com.Gerenciamento.Consulta.entities.UserRole;
 import com.Gerenciamento.Consulta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

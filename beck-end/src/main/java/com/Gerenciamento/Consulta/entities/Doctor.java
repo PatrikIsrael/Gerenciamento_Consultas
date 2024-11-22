@@ -1,4 +1,4 @@
-package com.Gerenciamento.Consulta.entity;
+package com.Gerenciamento.Consulta.entities;
 
 import com.Gerenciamento.Consulta.dto.DoctorDTO;
 import jakarta.persistence.*;

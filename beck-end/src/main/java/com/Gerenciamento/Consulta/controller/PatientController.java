@@ -1,8 +1,8 @@
 package com.Gerenciamento.Consulta.controller;
 
-import com.Gerenciamento.Consulta.entity.Patient;
+import com.Gerenciamento.Consulta.dto.PatientDTO;
 import com.Gerenciamento.Consulta.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,50 +11,38 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/patients")
+@RequiredArgsConstructor
 public class PatientController {
 
-    @Autowired
-    private PatientService patientService;
+    private final PatientService patientService;
 
     @GetMapping
-    public ResponseEntity<List<Patient>> getAllPatients() {
-        List<Patient> patients = patientService.findAllPatients();
+    public ResponseEntity<List<PatientDTO>> getAllPatients() {
+        List<PatientDTO> patients = patientService.findAllPatients();
         return ResponseEntity.ok(patients);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
-        Patient patient = patientService.findPatientById(id);
-        if (patient != null) {
-            return ResponseEntity.ok(patient);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<PatientDTO> getPatientById(@PathVariable Long id) {
+        PatientDTO patient = patientService.findPatientById(id);
+        return ResponseEntity.ok(patient);
     }
 
     @PostMapping
-    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) throws IllegalAccessException {
-        Patient newPatient = patientService.savePatient(patient);
+    public ResponseEntity<PatientDTO> savePatient(@RequestBody PatientDTO patientDTO) {
+        PatientDTO newPatient = patientService.savePatient(patientDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(newPatient);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable Long id, @RequestBody Patient patientDetails) {
-        Patient updatedPatient = patientService.updatePatient(id, patientDetails);
-        if (updatedPatient != null) {
-            return ResponseEntity.ok(updatedPatient);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
+        PatientDTO updatedPatient = patientService.updatePatient(id, patientDTO);
+        return ResponseEntity.ok(updatedPatient);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
-        boolean isDeleted = patientService.deletePatient(id);
-        if (isDeleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        patientService.deletePatient(id);
+        return ResponseEntity.noContent().build();
     }
 }

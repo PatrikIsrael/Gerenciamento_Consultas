@@ -1,7 +1,7 @@
 package com.Gerenciamento.Consulta.service;
 
 import com.Gerenciamento.Consulta.dto.PatientDTO;
-import com.Gerenciamento.Consulta.entity.Patient;
+import com.Gerenciamento.Consulta.entities.Patient;
 import com.Gerenciamento.Consulta.exceptions.InvalidRequestException;
 import com.Gerenciamento.Consulta.exceptions.ResourceNotFoundException;
 import com.Gerenciamento.Consulta.repository.PatientRepository;

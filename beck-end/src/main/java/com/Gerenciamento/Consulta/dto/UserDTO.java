@@ -1,6 +1,6 @@
 package com.Gerenciamento.Consulta.dto;
 
-import com.Gerenciamento.Consulta.entity.UserRole;
+import com.Gerenciamento.Consulta.entities.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
-    private long id;
+    private Long id;
     private String login;
     private String email;
     private UserRole role;

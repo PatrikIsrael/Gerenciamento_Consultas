@@ -1,6 +1,6 @@
 package com.Gerenciamento.Consulta.dto;
 
-import com.Gerenciamento.Consulta.entity.UserRole;
+import com.Gerenciamento.Consulta.entities.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

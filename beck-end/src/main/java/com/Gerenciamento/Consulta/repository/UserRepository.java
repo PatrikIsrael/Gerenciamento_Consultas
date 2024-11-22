@@ -1,7 +1,7 @@
 package com.Gerenciamento.Consulta.repository;
 
-import com.Gerenciamento.Consulta.entity.User;
-import com.Gerenciamento.Consulta.entity.UserRole;
+import com.Gerenciamento.Consulta.entities.User;
+import com.Gerenciamento.Consulta.entities.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
