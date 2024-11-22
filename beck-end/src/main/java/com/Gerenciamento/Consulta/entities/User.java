@@ -37,6 +37,7 @@ public class User implements UserDetails {
     private UserRole role;
 
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role == UserRole.ADMIN
