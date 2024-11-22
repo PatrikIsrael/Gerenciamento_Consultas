@@ -1,16 +1,14 @@
 package com.Gerenciamento.Consulta.service;
 
-import com.Gerenciamento.Consulta.dto.CreateUserDTO;
-import com.Gerenciamento.Consulta.dto.UpdateUserDTO;
+import com.Gerenciamento.Consulta.dto.UserDTO;
 import com.Gerenciamento.Consulta.entities.User;
-import com.Gerenciamento.Consulta.entities.UserRole;
+import com.Gerenciamento.Consulta.exceptions.ResourceNotFoundException;
+import com.Gerenciamento.Consulta.mapper.UserMapper;
 import com.Gerenciamento.Consulta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -18,50 +16,51 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    @Autowired
+    private UserMapper userMapper;
+
+    public List<UserDTO> findAllUsers() {
+        List<User> users = userRepository.findAll();
+        return userMapper.toDTOList(users);
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public UserDTO findUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário com o ID " + id + " não encontrado."));
+        return userMapper.toDTO(user);
     }
 
-    public User saveUser(CreateUserDTO userDTO) {
-        User user = new User();
-        user.setLogin(userDTO.getLogin());
-        user.setPassword(userDTO.getPassword());
-        user.setEmail(userDTO.getEmail());
-        if (userDTO.getRole() != null) {
-            user.setRole(userDTO.getRole());
-        } else {
-            user.setRole(UserRole.USER);
+    public UserDTO createUser(UserDTO userDTO) {
+        if (userDTO.getPassword() == null || userDTO.getPassword().isBlank()) {
+            throw new IllegalArgumentException("A senha não pode ser nula ou vazia");
         }
-
-        return userRepository.save(user);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    public User updateUser(Long id, UpdateUserDTO updateUserDTO) {
-        Optional<User> existingUser = userRepository.findById(id);
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
-            user.setPassword(updateUserDTO.getPassword());
-            user.setEmail(updateUserDTO.getEmail());
-            user.setRole(updateUserDTO.getRole());
-
-
-            return userRepository.save(user);
+        if (userDTO.getLogin() == null || userDTO.getLogin().isBlank()) {
+            throw new IllegalArgumentException("O login não pode ser nulo ou vazio");
         }
-        return null;
+        if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
+            throw new IllegalArgumentException("O e-mail não pode ser nulo ou vazio");
+        }
+        User user = userMapper.toEntity(userDTO);
+        User savedUser = userRepository.save(user);
+        return userMapper.toDTO(savedUser);
     }
 
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário com o ID " + id + " não encontrado."));
+        existingUser.setLogin(userDTO.getLogin());
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setRole(userDTO.getRole());
 
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteUser(Long id) {
+        User updatedUser = userRepository.save(existingUser);
+        return userMapper.toDTO(updatedUser);
+    }
+
+    public boolean deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Usuário com o ID " + id + " não encontrado.");
+        }
         userRepository.deleteById(id);
-    }
-
-    public Optional<User> findByLogin(String login) {
-        return userRepository.findByLogin(login);
+        return true;
     }
 }
