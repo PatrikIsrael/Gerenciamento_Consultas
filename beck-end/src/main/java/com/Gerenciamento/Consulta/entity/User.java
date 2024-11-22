@@ -18,7 +18,7 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
 
-    @Setter
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
