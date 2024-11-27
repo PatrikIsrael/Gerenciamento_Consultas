@@ -5,13 +5,13 @@ import com.Gerenciamento.Consulta.entities.Doctor;
 import com.Gerenciamento.Consulta.entities.User;
 import com.Gerenciamento.Consulta.exceptions.InvalidRequestException;
 import com.Gerenciamento.Consulta.exceptions.ResourceNotFoundException;
+import com.Gerenciamento.Consulta.mapper.DoctorMapper;
 import com.Gerenciamento.Consulta.repository.DoctorRepository;
 import com.Gerenciamento.Consulta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DoctorService {
@@ -22,16 +22,18 @@ public class DoctorService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private DoctorMapper doctorMapper;
+
     public List<DoctorDTO> findAllDoctors() {
-        return doctorRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        List<Doctor> doctors = doctorRepository.findAll();
+        return doctorMapper.toDTOList(doctors);
     }
 
     public DoctorDTO findById(Long id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico com o ID " + id + " não encontrado."));
-        return convertToDTO(doctor);
+        return doctorMapper.toDTO(doctor);
     }
 
     public DoctorDTO updateDoctor(Long id, DoctorDTO doctorDTO) {
@@ -52,17 +54,15 @@ public class DoctorService {
         }
 
         Doctor updatedDoctor = doctorRepository.save(existingDoctor);
-        return convertToDTO(updatedDoctor);
+        return doctorMapper.toDTO(updatedDoctor);
     }
 
-    public Doctor saveDoctor(DoctorDTO doctorDTO) {
+    public DoctorDTO saveDoctor(DoctorDTO doctorDTO) {
         if (doctorDTO.getName() == null || doctorDTO.getSpecialty() == null) {
             throw new InvalidRequestException("Nome e especialidade são obrigatórios para salvar um médico.");
         }
 
-        Doctor doctor = new Doctor();
-        doctor.setName(doctorDTO.getName());
-        doctor.setSpecialty(doctorDTO.getSpecialty());
+        Doctor doctor = doctorMapper.toEntity(doctorDTO);
 
         if (doctorDTO.getUserId() != null) {
             User user = userRepository.findById(doctorDTO.getUserId())
@@ -71,7 +71,7 @@ public class DoctorService {
         }
 
         Doctor savedDoctor = doctorRepository.save(doctor);
-        return (Doctor) convertToDTO(savedDoctor);
+        return doctorMapper.toDTO(savedDoctor);
     }
 
     public boolean deleteDoctor(Long id) {
@@ -84,13 +84,7 @@ public class DoctorService {
     }
 
     public List<DoctorDTO> findBySpecialty(String specialty) {
-        return doctorRepository.findBySpecialty(specialty).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    private DoctorDTO convertToDTO(Doctor doctor) {
-        Long userId = doctor.getUser() != null ? doctor.getUser().getId() : null;
-        return new DoctorDTO(doctor.getId(), doctor.getName(), doctor.getSpecialty(), userId);
+        List<Doctor> doctors = doctorRepository.findBySpecialty(specialty);
+        return doctorMapper.toDTOList(doctors);
     }
 }
