@@ -6,6 +6,7 @@ import com.Gerenciamento.Consulta.entities.Doctor;
 import com.Gerenciamento.Consulta.entities.Patient;
 import com.Gerenciamento.Consulta.exceptions.InvalidRequestException;
 import com.Gerenciamento.Consulta.exceptions.ResourceNotFoundException;
+import com.Gerenciamento.Consulta.mapper.ConsultationMapper;
 import com.Gerenciamento.Consulta.repository.ConsultationRepository;
 import com.Gerenciamento.Consulta.repository.DoctorRepository;
 import com.Gerenciamento.Consulta.repository.PatientRepository;
@@ -27,62 +28,48 @@ public class ConsultationService {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private ConsultationMapper consultationMapper;
 
     public List<ConsultationDTO> findAllConsultations() {
-        return consultationRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        List<Consultation> consultations = consultationRepository.findAll();
+        return consultationMapper.toDTOList(consultations);
     }
-
 
     public ConsultationDTO findConsultationById(Long id) {
         Consultation consultation = consultationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta com o ID " + id + " não encontrada."));
-        return convertToDTO(consultation);
+        return consultationMapper.toDTO(consultation);
     }
 
-
     public ConsultationDTO saveConsultation(ConsultationDTO consultationDTO) {
-        if (consultationDTO.getConsultationDate() == null || consultationDTO.getDoctorId() == null || consultationDTO.getPatientId() == null) {
-            throw new InvalidRequestException("Dados obrigatórios da consulta estão ausentes.");
-        }
+        validateConsultationDTO(consultationDTO);
 
-        Doctor doctor = doctorRepository.findById(consultationDTO.getDoctorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado"));
-        Patient patient = patientRepository.findById(consultationDTO.getPatientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
+        Doctor doctor = findDoctorById(consultationDTO.getDoctorId());
+        Patient patient = findPatientById(consultationDTO.getPatientId());
 
-
-        Consultation consultation = new Consultation();
-        consultation.setConsultationDate(consultationDTO.getConsultationDate());
-        consultation.setStatus(consultationDTO.getStatus());
+        Consultation consultation = consultationMapper.toEntity(consultationDTO);
         consultation.setDoctor(doctor);
         consultation.setPatient(patient);
 
         Consultation savedConsultation = consultationRepository.save(consultation);
-        return convertToDTO(savedConsultation);
+        return consultationMapper.toDTO(savedConsultation);
     }
 
-
     public ConsultationDTO updateConsultation(Long id, ConsultationDTO consultationDTO) {
+        validateConsultationDTO(consultationDTO);
+
         Consultation existingConsultation = consultationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Consulta com o ID " + id + " não encontrada."));
 
-        if (consultationDTO.getConsultationDate() == null) {
-            throw new InvalidRequestException("A data da consulta é obrigatória.");
-        }
-
         existingConsultation.setConsultationDate(consultationDTO.getConsultationDate());
         existingConsultation.setStatus(consultationDTO.getStatus());
-        existingConsultation.setDoctor(doctorRepository.findById(consultationDTO.getDoctorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado")));
-        existingConsultation.setPatient(patientRepository.findById(consultationDTO.getPatientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado")));
+        existingConsultation.setDoctor(findDoctorById(consultationDTO.getDoctorId()));
+        existingConsultation.setPatient(findPatientById(consultationDTO.getPatientId()));
 
         Consultation updatedConsultation = consultationRepository.save(existingConsultation);
-        return convertToDTO(updatedConsultation);
+        return consultationMapper.toDTO(updatedConsultation);
     }
-
 
     public void deleteConsultation(Long id) {
         if (!consultationRepository.existsById(id)) {
@@ -91,25 +78,31 @@ public class ConsultationService {
         consultationRepository.deleteById(id);
     }
 
-
     public List<ConsultationDTO> findConsultationsByStatus(String status) {
-        if (status == null || status.isEmpty()) {
+        if (status == null || status.trim().isEmpty()) {
             throw new InvalidRequestException("O status da consulta é obrigatório.");
         }
         return consultationRepository.findByStatus(status).stream()
-                .map(this::convertToDTO)
+                .map(consultationMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
 
-    private ConsultationDTO convertToDTO(Consultation consultation) {
-        ConsultationDTO dto = new ConsultationDTO();
-        dto.setId(consultation.getId());
-        dto.setConsultationDate(consultation.getConsultationDate());
-        dto.setStatus(consultation.getStatus());
-        dto.setDoctorId(consultation.getDoctor().getId());
-        dto.setPatientId(consultation.getPatient().getId());
-        return dto;
+    private Doctor findDoctorById(Long id) {
+        return doctorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Médico com o ID " + id + " não encontrado."));
     }
 
+    private Patient findPatientById(Long id) {
+        return patientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente com o ID " + id + " não encontrado."));
+    }
+
+    private void validateConsultationDTO(ConsultationDTO consultationDTO) {
+        if (consultationDTO.getConsultationDate() == null ||
+                consultationDTO.getDoctorId() == null ||
+                consultationDTO.getPatientId() == null) {
+            throw new InvalidRequestException("Dados obrigatórios da consulta estão ausentes.");
+        }
+    }
 }
